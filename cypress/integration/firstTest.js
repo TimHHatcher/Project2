@@ -51,7 +51,10 @@ describe('Test with backend', () => {
             cy.route('POST', '**/articles/' + articleLink + '/favorite', file)
         })
 
-        cy.get('app-article-list button').eq(1).click()
+        cy.get('app-article-list button')
+            .eq(1)
+            .click()
+            .should('contain', '11')
 
     })
  
