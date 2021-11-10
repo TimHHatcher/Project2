@@ -5,8 +5,8 @@ describe('Test with backend', () => {
     beforeEach('Login to Application', () => {
         cy.server()
         cy.route('GET', '**/tags', 'fixture:tags.json')
-        cy.route('GET', '**/api.realworld.io/api/articles/*/feed*', '{"articles":[],"articlesCount":0}')
-        cy.route('GET', '**/api.realworld.io/api/articles/*', 'fixture:articles.json')
+        cy.route('GET', '**articles/feed*', '{"articles":[],"articlesCount":0}')
+        cy.route('GET', '**articles*', 'fixture:articles.json')
  
         cy.applicationLogin()
     })

@@ -18,7 +18,7 @@
                 "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
             },
             "comments": [],
-            "favoritesCount": 0,
+            "favoritesCount": 5,
             "favorited": false
         },
         {
@@ -39,7 +39,7 @@
                 "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
             },
             "comments": [],
-            "favoritesCount": 0,
+            "favoritesCount": 10,
             "favorited": false
         }
     ],
