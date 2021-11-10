@@ -46,7 +46,7 @@ describe('Test with backend', () => {
         })
     })
 
-    it.only('intercepting and modifying the response', () => {
+    it('intercepting and modifying the response', () => {
         cy.intercept('POST', '**/api.realworld.io/api/articles', req => {
             req.reply(res => {
                 expect(res.body.article.description).to.equal('Description of Article1')
@@ -92,6 +92,38 @@ describe('Test with backend', () => {
             .click()
             .should('contain', '11')
 
+    })
+
+    it.only('Delete new article in the global feed via API', () => {
+        const userCredentials = {
+            "user": {
+                "email": "timhhatcher+conduit@gmail.com",
+                "password": "THHConduit21!"
+            }
+        }
+
+        const bodyRequest = {
+            "article": {
+                "tagList": [],
+                "title": "Test4",
+                "description": "Test4",
+                "body": "Test4"
+            }
+        }
+
+        cy.request('POST', 'https://api.realworld.io/api/users/login', userCredentials)
+        .its('body').then(body => {
+            const token = body.user.token
+            
+            cy.request({
+                url: 'https://api.realworld.io/api/articles/',
+                headers: {'Authorizaton': 'Token ' + token},
+                method: 'POST',
+                body: bodyRequest
+            }).then(response => {
+                expect(response.status).to.equal(200)
+            })
+        })
     })
  
 })
