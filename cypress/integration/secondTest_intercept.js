@@ -6,12 +6,12 @@ describe('Test with backend', () => {
         cy.intercept('GET', '**/tags', {fixture:'tags.json'})
         cy.intercept('GET', '**/articles/feed*', {"articles":[],"articlesCount":1})
         cy.intercept('GET', '**/articles*', {fixture:'articles.json'})
-        cy.intercept('POST', '**/articles').as('postArticles')
 
         cy.applicationLogin()
     })
  
     it('Verify correct request and response', () => {
+        cy.intercept('POST', '**/api.realworld.io/api/articles').as('postArticles')
         cy.contains('New Article').click()
         cy.get('[formcontrolname="title"]').type('Article1')
         cy.get('[formcontrolname="description"]').type('Description of Article1')
@@ -23,7 +23,48 @@ describe('Test with backend', () => {
             console.log(xhr)
             expect(xhr.response.statusCode).to.equal(200)
             expect(xhr.request.body.article.body).to.equal('Body of Article1')
-            expect(xhr.response.body.article.body).to.equal('Body of Article1')
+            expect(xhr.response.body.article.description).to.equal('Description of Article1')
+        })
+    })
+
+    it('intercepting and modifying the request', () => {
+        cy.intercept('POST', '**/api.realworld.io/api/articles', req => {
+            req.body.article.description = "Description of Article2"
+        }).as('postArticles')
+        cy.contains('New Article').click()
+        cy.get('[formcontrolname="title"]').type('Article1')
+        cy.get('[formcontrolname="description"]').type('Description of Article1')
+        cy.get('[formcontrolname="body"]').type('Body of Article1')
+        cy.contains('Publish Article').click()
+ 
+        cy.wait('@postArticles')
+        cy.get('@postArticles').then( xhr => {
+            console.log(xhr)
+            expect(xhr.response.statusCode).to.equal(200)
+            expect(xhr.request.body.article.body).to.equal('Body of Article1')
+            expect(xhr.response.body.article.description).to.equal('Description of Article2')
+        })
+    })
+
+    it.only('intercepting and modifying the response', () => {
+        cy.intercept('POST', '**/api.realworld.io/api/articles', req => {
+            req.reply(res => {
+                expect(res.body.article.description).to.equal('Description of Article1')
+                res.body.article.description = "Description of Article2"
+            })
+        }).as('postArticles')
+        cy.contains('New Article').click()
+        cy.get('[formcontrolname="title"]').type('Article1')
+        cy.get('[formcontrolname="description"]').type('Description of Article1')
+        cy.get('[formcontrolname="body"]').type('Body of Article1')
+        cy.contains('Publish Article').click()
+ 
+        cy.wait('@postArticles')
+        cy.get('@postArticles').then( xhr => {
+            console.log(xhr)
+            expect(xhr.response.statusCode).to.equal(200)
+            expect(xhr.request.body.article.body).to.equal('Body of Article1')
+            expect(xhr.response.body.article.description).to.equal('Description of Article2')
         })
     })
  
