@@ -1,0 +1,47 @@
+{
+    "articles": [
+        {
+            "slug": "Test2-1017",
+            "title": "TestTwo",
+            "description": "Test2",
+            "body": "Test2",
+            "createdAt": "2021-11-10T15:35:37.514Z",
+            "updatedAt": "2021-11-10T15:35:37.514Z",
+            "tagList": [
+                "four",
+                "five",
+                "six"
+            ],
+            "author": {
+                "username": "Thatcher",
+                "bio": null,
+                "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+            },
+            "comments": [],
+            "favoritesCount": 0,
+            "favorited": false
+        },
+        {
+            "slug": "Test1-1017",
+            "title": "TestOne",
+            "description": "Test1",
+            "body": "Test1",
+            "createdAt": "2021-11-10T15:33:18.298Z",
+            "updatedAt": "2021-11-10T15:33:18.298Z",
+            "tagList": [
+                "one",
+                "two",
+                "three"
+            ],
+            "author": {
+                "username": "Thatcher",
+                "bio": null,
+                "image": "https://api.realworld.io/images/smiley-cyrus.jpeg"
+            },
+            "comments": [],
+            "favoritesCount": 0,
+            "favorited": false
+        }
+    ],
+    "articlesCount": 3
+}
