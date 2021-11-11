@@ -110,10 +110,12 @@ describe('Test with backend', () => {
             }
         }
 
+        //Request to login
         cy.request('POST', 'https://api.realworld.io/api/users/login', userCredentials)
         .its('body').then(body => {
             const token = body.user.token
             
+            //Request to add new article
             cy.request({
                 url: 'https://api.realworld.io/api/articles/',
                 headers: {'Authorization': 'Token ' + token},
@@ -123,11 +125,24 @@ describe('Test with backend', () => {
                 expect(response.status).to.equal(200)
             })
             
-            cy.contains('Global Feed').click()
-            cy.get('.article-preview').first().click()
-            cy.get('.article-actions').contains('Delete Article').click()
-            cy.wait(500)
+            //Request article list and delete last added article
+            cy.request({
+                url: 'https://api.realworld.io/api/articles?limit=10&offset=0',
+                headers: {'Authorization': 'Token ' + token},
+                method: 'GET'
+            }).then(response => {
+                cy.get(response.body.articles).each(articles => {
+                    if(articles.title == 'Test4') {
+                        cy.intercept('DELETE', '**/api.realworld.io/api/articles/' + articles.slug).as('deleteArticle')
+                        cy.contains('Global Feed').click()
+                        cy.get('.article-preview').first().click()
+                        cy.get('.article-actions').contains('Delete Article').click()
+                        cy.wait('@deleteArticle')
+                    }
+                })
+            })
 
+            //Request article list and validate article was deleted
             cy.request({
                 url: 'https://api.realworld.io/api/articles?limit=10&offset=0',
                 headers: {'Authorization': 'Token ' + token},
