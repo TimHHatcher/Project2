@@ -117,7 +117,7 @@ describe('Test with backend', () => {
             
             cy.request({
                 url: 'https://api.realworld.io/api/articles/',
-                headers: {'Authorizaton': 'Token ' + token},
+                headers: {'Authorization': 'Token ' + token},
                 method: 'POST',
                 body: bodyRequest
             }).then(response => {
