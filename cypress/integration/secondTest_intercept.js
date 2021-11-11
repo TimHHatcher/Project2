@@ -3,10 +3,6 @@
 describe('Test with backend', () => {
  
     beforeEach('Login to Application', () => {
-        cy.intercept('GET', '**/tags', {fixture:'tags.json'})
-        cy.intercept('GET', '**/articles/feed*', {"articles":[],"articlesCount":1})
-        cy.intercept('GET', '**/articles*', {fixture:'articles.json'})
-
         cy.applicationLogin()
     })
  
@@ -69,6 +65,7 @@ describe('Test with backend', () => {
     })
  
     it('respond to browser with custom tags file', () => {
+        cy.intercept('GET', '**/tags', {fixture:'tags.json'})
         cy.get('.tag-list')
             .should('contain', 'butt')
             .and('contain', 'test')
@@ -76,6 +73,8 @@ describe('Test with backend', () => {
     })
  
     it('verify global feed likes count', () => {
+        cy.intercept('GET', '**/articles/feed*', {"articles":[],"articlesCount":1})
+        cy.intercept('GET', '**/articles*', {fixture:'articles.json'})
         cy.contains('Global Feed').click()
         cy.get('app-article-list button').then( listOfButtons => {
             expect(listOfButtons[0]).to.contain('5')
@@ -123,6 +122,21 @@ describe('Test with backend', () => {
             }).then(response => {
                 expect(response.status).to.equal(200)
             })
+            
+            cy.contains('Global Feed').click()
+            cy.get('.article-preview').first().click()
+            cy.get('.article-actions').contains('Delete Article').click()
+            cy.wait(500)
+
+            cy.request({
+                url: 'https://api.realworld.io/api/articles?limit=10&offset=0',
+                headers: {'Authorization': 'Token ' + token},
+                method: 'GET'
+            }).its('body')
+                .its('articles')
+                .should(articleList => {
+                    expect(articleList.map(i => i.title)).to.not.include('Test4')
+                })
         })
     })
  
