@@ -25,8 +25,17 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('applicationLogin', () => {
+    const username = Cypress.env('username')
+    const password = Cypress.env('password')
+
+    expect(username, 'username was set').to.be.a('string').and.not.be.empty
+    if (typeof password !== 'string' || !password) {
+        throw new Error('Missing password value, set using CYPRESS_password=...')
+    }
+    expect(password, 'password was set').to.be.a('string').and.not.be.empty
+    
     cy.visit('/login')
-    cy.get('[formcontrolname="email').type('timhhatcher+conduit@gmail.com')
-    cy.get('[formcontrolname="password"]').type('THHConduit21!')
+    cy.get('[formcontrolname="email').type(username)
+    cy.get('[formcontrolname="password"]').type(password, {log: false})
     cy.get('form').submit()
 })
