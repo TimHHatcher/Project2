@@ -62,7 +62,7 @@ Cypress.Commands.add('headlessLogin', () => {
             cy.wrap(token).as('token')
             cy.visit('/', {
                 onBeforeLoad (win) {
-                    win.localStorage.setItem('jwToken', token)
+                    win.localStorage.setItem('jwtToken', token)
                 }
             })
         })
