@@ -38,7 +38,7 @@ describe('Test with backend', () => {
             .and('contain', 'dragon')
     })
  
-    it('verify global feed likes count', () => {
+    it.skip('verify global feed likes count', () => {
  
         cy.contains('Global Feed').click()
         cy.get('app-article-list button').then( listOfButtons => {
