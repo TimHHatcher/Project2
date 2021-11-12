@@ -39,3 +39,31 @@ Cypress.Commands.add('applicationLogin', () => {
     cy.get('[formcontrolname="password"]').type(password, {log: false})
     cy.get('form').submit()
 })
+
+Cypress.Commands.add('headlessLogin', () => {
+    const username = Cypress.env('username')
+    const password = Cypress.env('password')
+    const userCredentials = {
+        "user": {
+            "email": username,
+            "password": password
+        }
+    }
+    
+    expect(username, 'username was set').to.be.a('string').and.not.be.empty
+    if (typeof password !== 'string' || !password) {
+        throw new Error('Missing password value, set using CYPRESS_password=...')
+    }
+    expect(password, 'password was set').to.be.a('string').and.not.be.empty
+    cy.request('POST', 'https://api.realworld.io/api/users/login', userCredentials)
+        .its('body').then(body => {
+            const token = body.user.token
+
+            cy.wrap(token).as('token')
+            cy.visit('/', {
+                onBeforeLoad (win) {
+                    win.localStorage.setItem('jwToken', token)
+                }
+            })
+        })
+})
