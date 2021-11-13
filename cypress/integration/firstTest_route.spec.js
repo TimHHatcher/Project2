@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
  
-describe('Test with backend', () => {
+describe.skip('Test with backend', () => {
  
     beforeEach('Login to Application', () => {
         cy.server()
@@ -11,7 +11,7 @@ describe('Test with backend', () => {
         cy.applicationLogin()
     })
  
-    it.skip('Verify correct request and response', () => {
+    it('Verify correct request and response', () => {
        
         cy.server()
         cy.route('POST', '**/articles').as('postArticles')
@@ -31,14 +31,14 @@ describe('Test with backend', () => {
         })
     })
  
-    it.skip('respond to browser with custom tags file', () => {
+    it('respond to browser with custom tags file', () => {
         cy.get('.tag-list')
             .should('contain', 'butt')
             .and('contain', 'test')
             .and('contain', 'dragon')
     })
  
-    it.skip('verify global feed likes count', () => {
+    it('verify global feed likes count', () => {
  
         cy.contains('Global Feed').click()
         cy.get('app-article-list button').then( listOfButtons => {
