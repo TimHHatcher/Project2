@@ -12,7 +12,7 @@ describe.skip('Test with backend', () => {
     })
  
     it('Verify correct request and response', () => {
-       
+        
         cy.server()
         cy.route('POST', '**/articles').as('postArticles')
        
